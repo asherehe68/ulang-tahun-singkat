@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday - The Queen Bouquet</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&family=Inter:wght@400;500;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{--dk:#4a3566;--gold:#D4AF37;--lav:#8b6fd0}
+body{font-family:'Inter',sans-serif;font-size:17px;line-height:1.65;color:var(--dk);overflow-x:hidden;
+ background:linear-gradient(160deg,#ece3f8 0%,#fde6dd 50%,#fbe3f0 100%) fixed}
+.pf{font-family:'Press Start 2P',monospace;line-height:1.5}
+.ser{font-family:'Playfair Display',serif}
+.ttl{font-family:'Playfair Display',serif;font-weight:700;color:var(--dk);display:inline-block;padding-bottom:8px;border-bottom:4px solid var(--gold)}
+.pix{image-rendering:pixelated}
+.px{box-shadow:-4px 0 var(--dk),4px 0 var(--dk),0 -4px var(--dk),0 4px var(--dk),0 8px var(--gold);margin-bottom:8px}
+.px-g{box-shadow:-4px 0 var(--gold),4px 0 var(--gold),0 -4px var(--gold),0 4px var(--gold),0 8px var(--dk);margin-bottom:8px}
+.btn{font-family:'Press Start 2P',monospace;font-size:12px;background:var(--gold);color:var(--dk);padding:14px 22px;
+ box-shadow:-4px 0 var(--dk),4px 0 var(--dk),0 -4px var(--dk),0 4px var(--dk),0 8px #8a6d12}
+.btn:active{transform:translateY(4px)}
+.arch{clip-path:polygon(0 100%,0 30%,4% 30%,4% 18%,8% 18%,8% 10%,14% 10%,14% 5%,22% 5%,22% 2%,35% 2%,35% 0,65% 0,65% 2%,78% 2%,78% 5%,86% 5%,86% 10%,92% 10%,92% 18%,96% 18%,96% 30%,100% 30%,100% 100%)}
+.ph{background:#e9ddf7;aspect-ratio:4/3;object-fit:cover;width:100%}
+.lv{font-family:'Press Start 2P';font-size:10px;background:var(--dk);color:#FBF5B7;padding:7px 9px;display:inline-block;margin-bottom:10px}
+.clothes{position:relative;overflow:hidden;padding:40px 0 64px}
+.string{position:absolute;left:0;right:0;top:22px;height:4px;background:repeating-linear-gradient(90deg,var(--dk) 0 12px,var(--gold) 12px 16px)}
+.ctrack{position:relative;display:flex;gap:28px;width:max-content;will-change:transform}
+.pol{position:relative;flex:none;width:250px;background:#fff;padding:12px 12px 0;transform-origin:50% 0;transform:rotate(var(--r,-2deg)) scale(.94);transition:transform .5s steps(5)}
+.pol:nth-child(even){--r:2deg}
+.pol.on{transform:rotate(0) scale(1.03)}
+.pol::before{content:"";position:absolute;left:50%;top:-18px;width:14px;height:34px;margin-left:-7px;background:#c98f55;box-shadow:-2px 0 var(--dk),2px 0 var(--dk),0 -2px var(--dk),0 2px var(--dk);z-index:2}
+.cap{height:180px;padding:12px 4px;text-align:center;opacity:0;transition:opacity .5s steps(5)}
+.pol.on .cap{opacity:1}
+.cap .lv{font-size:9px;margin-bottom:6px}
+.pol{cursor:pointer}
+.chint{position:absolute;left:0;right:0;bottom:14px;text-align:center;font-size:13px;opacity:.7}
+@media(max-width:640px){.pol{width:230px}}
+#float{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.dc{position:absolute;opacity:0;transform:translateY(24px);transition:opacity .6s steps(4),transform .6s steps(4)}
+.dc.in{opacity:.85;transform:none}
+@media(prefers-reduced-motion:reduce){.dc{transition:none;opacity:.85;transform:none}}
+.rv{opacity:0;transform:translate(var(--x,0),var(--y,28px));transition:opacity .6s steps(6),transform .6s steps(6)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+.hop{animation:hop 1s steps(4) infinite}
+@keyframes hop{50%{transform:translateY(-14px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin 3s steps(12) infinite}.paused{animation-play-state:paused}
+#gameCanvas{width:100%;display:block;image-rendering:pixelated;background:#cdb8f0;touch-action:none}
+.ov{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px;color:#fff;background:rgba(74,53,102,.82)}
+.ov.on{display:flex}
+.gl{color:#FBF5B7}
+.sep{display:flex;justify-content:center;gap:14px;margin:48px 0}
+.cp.done{background:var(--gold)!important}
+</style>
+</head>
+<body class="min-h-screen">
+<!-- GIFT OVERLAY -->
+<div id="gift" class="fixed inset-0 z-[100] flex flex-col items-center justify-center cursor-pointer transition-opacity duration-1000" style="background:#fde6f0" onclick="openGift()">
+  <img data-s="gift" data-z="9" class="hop" alt="">
+  <h2 class="ser font-bold text-2xl md:text-3xl mt-8 text-center px-4">Tap untuk buka kado</h2>
+  <p class="mt-2">Nyalakan suaramu!</p>
+</div>
+
+<div id="main" class="hidden opacity-0 transition-opacity duration-1000 relative z-10">
+  <div id="float"></div>
+  <header class="sticky top-0 z-40 bg-white py-4 px" style="margin-bottom:12px">
+    <div class="max-w-4xl mx-auto px-4 flex flex-col items-center text-center">
+      <div class="flex items-center gap-3">
+        <h1 class="ser font-bold text-2xl md:text-4xl">The Queen Bouquet</h1>
+      </div>
+      <p class="text-sm mt-1" style="color:var(--lav)">085856581685 &nbsp;|&nbsp; 085706827601</p>
+    </div>
+  </header>
+
+  <main class="py-10 px-6 max-w-4xl mx-auto">
+    <!-- HERO -->
+    <section class="grid md:grid-cols-2 gap-10 items-center mb-8">
+      <div class="text-center md:text-left">
+        <p class="ser italic text-lg mb-3" style="color:var(--lav)">Special Delivery For You</p>
+        <h2 class="ser font-bold leading-tight" style="font-size:clamp(2.6rem,9vw,4.2rem)">Happy<br><i style="color:var(--lav)">Birthday</i></h2>
+        <p class="mt-5 text-lg ser italic">May your day be as beautiful and glamorous as you (think you) are.</p>
+        <p class="mt-3 text-sm">Ada misi cari kupon dari kakak di bawah. Mainkan sampai selesai ya.</p>
+      </div>
+      <div class="relative max-w-sm mx-auto w-full" style="filter:drop-shadow(8px 8px 0 var(--gold))">
+        <div class="arch" style="background:var(--dk)"><img src="assets/foto-utama.webp" class="ph arch" style="aspect-ratio:3/4" alt="Foto utama"></div>
+        <div class="absolute -bottom-3 -left-3 px pf text-center px-3 py-3" style="background:var(--gold);font-size:9px;color:var(--dk);margin:0">LEVEL<br>UP!</div>
+      </div>
+    </section>
+
+    <!-- JOKE QUOTE -->
+    <section class="bg-white px p-6 md:p-10 text-center my-14" style="margin-left:4px;margin-right:4px">
+      <div class="flex justify-center items-end gap-3 mb-4"><img data-s="balon" data-z="3" alt=""><img data-s="lolipop" data-z="3" alt=""><img data-s="beruang" data-z="3" alt=""></div>
+      <p class="ser italic font-medium text-2xl md:text-3xl leading-relaxed">"Selamat ulang tahun adikku! Walaupun dulu mama papa nemu kamu di dalem kardus di pasar (bercanda woy), <b style="color:var(--lav)">I'm still proud to be your brother.</b>"</p>
+    </section>
+
+    <!-- PHOTOS -->
+    <div class="text-center mb-14"><h2 class="ttl text-3xl md:text-4xl">Memory Lane</h2></div>
+    <section id="photos" class="flex flex-col gap-16 mb-8"></section>
+
+    <div class="sep" data-sep></div>
+
+    <!-- GAME -->
+    <section class="bg-white p-4 md:p-6 px-g mb-12" id="game-section" style="margin-left:4px;margin-right:4px">
+      <div class="text-center mb-5">
+        <h3 class="ser font-bold text-2xl md:text-3xl mb-2">Misi Cari Kupon</h3>
+        <p class="ser italic text-lg mb-2" style="color:var(--lav)">Cari tumpukan kupon yang hilang di pasar!</p>
+        <p class="text-sm md:text-base">Tekan <b>SPASI</b> atau <b>TAP</b> layar untuk lompat. Bertahan sampai garis emas penuh!</p>
+      </div>
+      <div class="relative px" style="margin:8px 4px 12px">
+        <canvas id="gameCanvas" width="480" height="240"></canvas>
+        <div id="ov-start" class="ov on">
+          <p class="ser font-bold text-2xl mb-4 gl">Siap main?</p>
+          <button class="btn" onclick="startGame()">▶ PLAY</button>
+        </div>
+        <div id="ov-over" class="ov">
+          <p class="ser font-bold text-2xl mb-4">Aduh, nabrak!</p>
+          <button class="btn" onclick="startGame()">COBA LAGI</button>
+        </div>
+        <div id="ov-win" class="ov">
+          <p class="ser font-bold text-3xl mb-3 gl">Kupon ketemu!</p>
+          <p class="text-lg">Tumpukan kuponnya ketemu! Kuponnya terbuka di bawah...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- REWARD: kupon dulu, baru video -->
+    <section id="reward" class="hidden flex-col gap-20 pb-24">
+      <div class="text-center">
+        <h3 class="ttl text-3xl md:text-4xl mb-4">Sibling Coupons</h3>
+        <p class="mb-10">Klik kupon di bawah ini untuk klaim hadiah dari Kakak. Berlaku 1x pakai!</p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 px-1" id="coupons"></div>
+      </div>
+      <div class="text-center">
+        <h3 class="ttl text-3xl md:text-4xl mb-4">Special Message</h3>
+        <p class="ser italic mb-8">Tonton sampai habis, jangan di-skip!</p>
+        <div class="px-g bg-[#e9ddf7]" style="margin:0 4px 8px">
+          <video controls playsinline class="w-full aspect-video bg-black" src="assets/video-ucapan.mp4"></video>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-white text-center py-10 px">
+    <h3 class="ser font-bold text-2xl mb-2">The Queen Bouquet</h3>
+    <p class="text-sm">© 2026 All Rights Reserved by Rachel Wijayani</p>
+  </footer>
+</div>
+
+<audio id="bgm" src="assets/lagu-piano.mp3" loop preload="auto"></audio>
+<audio id="arcade" src="assets/lagu-arcade.mp3" loop preload="auto"></audio>
+<button id="music" class="fixed bottom-5 right-5 z-50 hidden opacity-0 bg-white p-2 px-g transition-opacity" onclick="toggleMusic()" aria-label="Musik">
+  <div id="vinyl" class="spin w-12 h-12 rounded-full flex items-center justify-center" style="background:conic-gradient(#222 0 25%,#4a3566 0 50%,#222 0 75%,#4a3566 0)"><div class="w-4 h-4 rounded-full" style="background:var(--gold)"></div></div>
+</button>
+
+<script>
+const $=id=>document.getElementById(id);
+/* ---------- PIXEL SPRITES ---------- */
+const PAL={K:'#5b3a29',S:'#ffd9b8',E:'#3b2a3f',R:'#f06a8d',P:'#f4a6c6',G:'#D4AF37',Y:'#fff1a8',B:'#7a4a2a',T:'#e2b97a',O:'#c77d3f',W:'#f3dca0',C:'#ffffff',L:'#c9a0e8',U:'#8fd3f4',D:'#6b5b7b'};
+const BODY=["..KKGGKK..",".KKKKKKKK.",".KKSSSSKK.",".KSESSESK.",".KSSSSSSK.",".KKSRRSKK.","..PPPPPP..",".SPPPPPPS.",".SPPGGPPS.","..PPPPPP..",".PPPPPPPP.","PPPPPPPPPP"];
+const SP={
+ girl:BODY.concat(["..SS..SS..","..BB..BB.."]),
+ girl2:BODY.concat([".SS....SS.",".BB....BB."]),
+ girlj:BODY.concat(["...SSSS...","...BBBB..."]),
+ crate:["BBBBBBBBBB","BTTTTTTTTB","BTBTTTTBTB","BTTBTTBTTB","BTTTBBTTTB","BTTTBBTTTB","BTTBTTBTTB","BTBTTTTBTB","BTTTTTTTTB","BBBBBBBBBB"],
+ basket:["...OOOO...","..O....O..",".OOOOOOOO.","OWOWOWOWOW","WOWOWOWOWO","OWOWOWOWOW","WOWOWOWOWO",".OWOWOWOW."],
+ lolipop:["..RRRRR..",".RCCCCCR.","RCRRRRRCR","RCRCCCRCR","RCRCRCRCR","RCRCCCRCR","RCRRRRRCR",".RCCCCCR.","..RRRRR..","....T....","....T....","....T....","....T...."],
+ balon:["..UUUU..",".UCCUUU.","UUCUUUUU","UUCUUUUU","UUUUUUUU","UUUUUUUU",".UUUUUU.","..UUUU..","...UU...","...DD...","....D...","...D....","....D..."],
+ beruang:["OO.....OO","OTO...OTO",".OOOOOOO.","OOOOOOOOO","OOEOOOEOO","OOOOOOOOO","OOOTTTOOO","OOTTETTOO",".OOOOOOO.","OOOTTTOOO",".OTTTTTO.",".OOO.OOO.",".TTT.TTT."],
+ star:["...G...","..GGG..","GGGGGGG",".GGGGG.","..GGG..",".GG.GG.",".G...G."],
+ coin:["..GGGG..",".GYYYYG.","GYYGGYYG","GYGYYGYG","GYGYYGYG","GYYGGYYG",".GYYYYG.","..GGGG.."],
+ crown:["G...G...G","GG.GGG.GG","GGGGGGGGG","GGGYGYGGG","GGGGGGGGG",".GGGGGGG."],
+ stack:[".LLLLLLLLLL.","LCCCCGGCCCCL",".LLLLLLLLLL.","PPPPPPPPPPPP","PCCCCGGCCCCP","PPPPPPPPPPPP",".GGGGGGGGGG.","GYYYYRRYYYYG",".GGGGGGGGGG.","LLLLLLLLLLLL","LCCCCGGCCCCL","LLLLLLLLLLLL"],
+ cloud:["....CCCC........","..CCCCCCCC..CC..",".CCCCCCCCCCCCCC.","CCCCCCCCCCCCCCCC","CCCCCCCCCCCCCCCC",".CCCCCCCCCCCCCC."],
+ gift:["..RRR.RRR.","...RRRRR..","PPPPGGPPPP","PPPPGGPPPP",".PPPGGPPP.",".LLLGGLLL.",".LLLGGLLL.",".LLLGGLLL.",".LLLGGLLL.",".LLLGGLLL."]
+};
+function cv(rows,sc,pal){const c=document.createElement('canvas');c.width=rows[0].length*sc;c.height=rows.length*sc;const x=c.getContext('2d');
+ rows.forEach((r,j)=>[...r].forEach((h,i)=>{if(h!='.'){x.fillStyle=(pal&&pal[h])||PAL[h];x.fillRect(i*sc,j*sc,sc,sc)}}));return c}
+document.querySelectorAll('img[data-s]').forEach(i=>{i.src=cv(SP[i.dataset.s],+i.dataset.z||4).toDataURL();i.classList.add('pix')});
+const sp=(n,z)=>{const i=new Image();i.src=cv(SP[n],z).toDataURL();i.className='pix';return i};
+document.querySelectorAll('[data-sep]').forEach(d=>['balon','star','lolipop'].forEach(n=>d.appendChild(sp(n,3))));
+
+/* ---------- CONTENT ---------- */
+const FOTO=[["Masih Ingat Ini?","Muka masih polos belum kenal skincare. Sekarang udah sok cantik tapi tetep aja kalau tidur ngorok."],
+["Partner In Crime","Berantem terus tiap hari, tapi kalau mau minta uang jajan ke Ibu pasti mendadak kompak."],
+["Waktu Liburan","Momen langka kita bisa akur lebih dari 24 jam tanpa ada yang nangis."],
+["Lulus!","Satu dari sedikit momen di mana Kakak beneran bangga sama kamu (sedikit aja ya)."],
+["Candid Aib","Sengaja dipasang biar kamu tahu aku punya banyak senjata rahasia."],
+["Growing Up","Tumbuh jadi wanita hebat ya, jangan cengeng terus. Kakak selalu ada buat nge-bully... eh, jagain kamu."]];
+(()=>{
+const N=FOTO.length,K=2;
+const card=(i,cl)=>`<div class="pol px"${cl?' aria-hidden="true"':''}><img src="assets/foto${i+1}.webp" class="ph" style="aspect-ratio:1/1" alt="${cl?'':FOTO[i][0]}"><div class="cap"><span class="lv">LV.${i+1}</span><h3 class="ser font-bold text-lg leading-snug">${FOTO[i][0]}</h3><p class="text-sm leading-snug">${FOTO[i][1]}</p></div></div>`;
+const idx=[...Array(K)].map((_,j)=>N-K+j).concat([...Array(N).keys()],[...Array(K)].map((_,j)=>j));
+$('photos').innerHTML=`<div class="clothes"><div class="string"></div><p class="chint"></p><div class="ctrack" id="ctrack">${idx.map((n,k)=>card(n,k<K||k>=K+N)).join('')}</div></div>`;
+const vp=document.querySelector('.clothes'),tr=$('ctrack'),cards=[...tr.children];
+let p=K,moving=false,vis=false,paused=false,tm;
+function setPos(anim){const c=cards[p];tr.style.transition=anim?'transform .8s cubic-bezier(.45,0,.2,1)':'none';tr.style.transform=`translateX(${vp.clientWidth/2-(c.offsetLeft+c.offsetWidth/2)}px)`}
+function show(){cards.forEach((c,i)=>c.classList.toggle('on',i===p))}
+function arrive(){moving=false;if(p>=K+N){p=K;setPos(false);tr.offsetWidth}show();if(vis&&!paused)tm=setTimeout(slide,3000)}
+function slide(){moving=true;cards.forEach(c=>c.classList.remove('on'));p++;setPos(true);setTimeout(arrive,850)}
+new ResizeObserver(()=>setPos(false)).observe(vp);
+new IntersectionObserver(es=>{vis=es[0].isIntersecting;clearTimeout(tm);if(vis&&!moving&&!paused){show();tm=setTimeout(slide,3000)}},{threshold:.4}).observe(vp);
+const hint=vp.querySelector(".chint"),hintTxt=()=>hint.textContent=paused?"Dijeda, tap lagi untuk lanjut":"Tap foto untuk jeda";hintTxt();
+vp.addEventListener("click",()=>{paused=!paused;hintTxt();clearTimeout(tm);if(!paused&&vis&&!moving){show();tm=setTimeout(slide,1000)}});
+})();
+$('coupons').innerHTML=[['lolipop','Traktir Boba','Klaim untuk 1x Chatime Large.'],['star','Bebas Disuruh','1 Hari bebas dari babu Kakak.'],['coin','Numpang Netflix','Password ga akan diganti bulan ini.']].map(c=>`
+<div class="cp bg-white p-6 px cursor-pointer" onclick="claim(this)"><div class="u"><div class="flex justify-center items-center h-20 mb-3" data-ic="${c[0]}"></div><h4 class="ser font-bold text-xl mb-1">${c[1]}</h4><p class="text-sm">${c[2]}</p></div><div class="d hidden py-8"><p class="ser font-bold text-2xl">Diklaim!</p></div></div>`).join('');
+document.querySelectorAll('[data-ic]').forEach(d=>d.appendChild(sp(d.dataset.ic,6)));
+
+/* ---------- SCROLL REVEAL ---------- */
+document.querySelectorAll('main>section:not(:first-child):not(#photos):not(#reward),main>div.text-center,#reward>div,#coupons>div,footer').forEach(e=>e.classList.add('rv'));
+document.querySelectorAll('#photos>div').forEach(c=>c.classList.add('rv'));
+document.querySelectorAll('#coupons>div').forEach((c,i)=>c.style.transitionDelay=i*150+'ms');
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.rv').forEach(e=>io.observe(e));
+
+/* ---------- DEKOR SISI HALAMAN (menyesuaikan lebar layar, muncul saat scroll) ---------- */
+const DC=[];
+function placeDecor(){
+ const m=document.querySelector('main'),fl=$('float');if(!m.offsetWidth)return;
+ const gut=m.getBoundingClientRect().left+parseFloat(getComputedStyle(m).paddingLeft),z=gut>=90?4:3,H=$('main').offsetHeight;
+ let n=0;
+ for(let y=620;y<H-320;y+=400,n++){
+  const nm=['star','balon','coin','lolipop','beruang'][n%5],w=SP[nm][0].length*z,x=Math.round(Math.max(gut-w,0)*((n*.37)%1));
+  let im=DC[n];if(!im){im=DC[n]=new Image();im.className='pix dc';fl.appendChild(im);io.observe(im)}
+  if(im.dataset.k!==nm+z){im.dataset.k=nm+z;im.src=cv(SP[nm],z).toDataURL()}
+  im.style.top=(y+(n*47)%120)+'px';im.style.left=n%2?'auto':x+'px';im.style.right=n%2?x+'px':'auto';
+ }
+ while(DC.length>n)DC.pop().remove();
+}
+new ResizeObserver(placeDecor).observe($('main'));
+
+/* ---------- AUDIO ---------- */
+const bgm=$('bgm'),arc=$('arcade'),vid=document.querySelector('#reward video');
+let AC,started=false,inGame=false,vidOn=false,userOff=false;
+function fade(a,to,stop){clearInterval(a._t);let n=0;a._t=setInterval(()=>{n++;const d=to-a.volume;
+ if(n>20||Math.abs(d)<=.06){a.volume=to;clearInterval(a._t);if(stop&&!to)a.pause();return}a.volume+=d>0?.06:-.06},50)}
+/* satu pengatur musik: piano di halaman, arcade di section game, volume mengecil saat video diputar */
+function sync(){
+ const want=(!started||userOff)?null:(inGame?arc:bgm);
+ const targetVol=vidOn?.15:1;
+ [bgm,arc].forEach(a=>{
+  if(a===want){if(a.paused)a.play().catch(()=>{});fade(a,targetVol)}
+  else fade(a,0,true)});
+ $('vinyl').classList.toggle('paused',!want);
+}
+new IntersectionObserver(es=>{inGame=es[0].isIntersecting;sync()},{threshold:.3}).observe($('game-section'));
+vid.addEventListener('play',()=>{vidOn=true;sync()});
+['pause','ended'].forEach(ev=>vid.addEventListener(ev,()=>setTimeout(()=>{if(vid.paused||vid.ended){vidOn=false;sync()}},300)));
+function beep(a,b,d){AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime;
+ o.type='square';o.frequency.setValueAtTime(a,t);o.frequency.setValueAtTime(b,t+d/2);g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(t+d)}
+function claim(el){const u=el.querySelector('.u');if(u.classList.contains('hidden'))return;beep(880,1760,.3);u.classList.add('hidden');el.querySelector('.d').classList.remove('hidden');el.classList.add('done')}
+function openGift(){const g=$('gift');g.style.opacity=0;started=true;bgm.volume=0;arc.volume=0;arc.play().then(()=>arc.pause()).catch(()=>{});sync();
+ setTimeout(()=>{g.classList.add('hidden');const m=$('main');m.classList.remove('hidden');setTimeout(()=>m.style.opacity=1,50);
+  const b=$('music');b.classList.remove('hidden');setTimeout(()=>b.style.opacity=1,50);},1000)}
+function toggleMusic(){userOff=!userOff;sync()}
+
+/* ---------- GAME (pasar pixel) ---------- */
+const cvs=$('gameCanvas'),g=cvs.getContext('2d');g.imageSmoothingEnabled=false;
+const W=480,H=240,GY=200,WIN=1200,PX=50,PW=30,PH=42;
+const I={g:cv(SP.girl,3),g2:cv(SP.girl2,3),gj:cv(SP.girlj,3),stack:cv(SP.stack,3),star:cv(SP.star,3),crate:cv(SP.crate,3),basket:cv(SP.basket,3),cloud:cv(SP.cloud,3)};
+const AWN=[['#f4a6c6','#fff'],['#b79ce0','#fff'],['#f6b8a8','#fff']],FR=['#f06a8d','#f6c344','#8bd46e','#ff9d4d'];
+let run=false,raf,f=0,off=0,obs=[],py=GY-PH,vy=0,next=90;
+const sky=g.createLinearGradient(0,0,0,GY);sky.addColorStop(0,'#c9b4ef');sky.addColorStop(.6,'#fbd9d9');sky.addColorStop(1,'#ffeef3');
+function scene(kid){
+ g.fillStyle=sky;g.fillRect(0,0,W,H);
+ g.fillStyle='#D4AF37';g.fillRect(404,20,32,40);g.fillRect(396,28,48,24);g.fillStyle='#fff1a8';g.fillRect(412,28,16,16);
+ [[40,30],[220,50],[330,20]].forEach((c,i)=>g.drawImage(I.cloud,((c[0]-off*(.1+i*.05))%(W+60)+W+60)%(W+60)-50,c[1]));
+ const o2=off*.3,b2=Math.floor(o2/70);g.fillStyle='#dccbf3';
+ for(let k=-1;k<8;k++){const id=b2+k,h=50+(id*37%40+40)%40;g.fillRect(k*70-(o2%70),150-h,60,h);g.fillStyle='#fff7c2';g.fillRect(k*70-(o2%70)+10,150-h+10,8,8);g.fillStyle='#dccbf3'}
+ const o=off*.6,b=Math.floor(o/130);
+ for(let k=-1;k<5;k++){const x=k*130-(o%130),id=b+k,a=AWN[((id%3)+3)%3];
+  g.fillStyle='#7a4a2a';g.fillRect(x+6,100,6,100);g.fillRect(x+104,100,6,100);
+  for(let s=0;s<8;s++){g.fillStyle=a[s%2];g.fillRect(x+s*14,76,14,24);if(s%2)g.fillRect(x+s*14,100,14,6)}
+  g.fillStyle='#D4AF37';g.fillRect(x,72,112,4);
+  g.fillStyle='#c98f55';g.fillRect(x+4,160,104,40);g.fillStyle='#a8703a';g.fillRect(x+4,160,104,4);
+  for(let n=0;n<6;n++){g.fillStyle=FR[((id+n)%4+4)%4];g.fillRect(x+12+n*16,148,12,12)}}
+ g.fillStyle='#f1d9c0';g.fillRect(0,GY,W,H-GY);g.fillStyle='#D4AF37';g.fillRect(0,GY,W,4);
+ g.fillStyle='#e3c3a3';for(let x=-(off%24);x<W;x+=24){g.fillRect(x,GY+16,12,4);g.fillRect(x+12,GY+30,12,4)}
+ obs.forEach(q=>g.drawImage(q.t?I.crate:I.basket,q.x,GY-q.h));
+ if(kid){g.drawImage(I.stack,396,GY-36);g.drawImage(I.star,405,GY-62)}
+ g.drawImage(py<GY-PH?I.gj:(run&&f%16<8?I.g2:I.g),PX,py);
+ g.fillStyle='#4a3566';g.fillRect(12,12,208,20);g.fillStyle='#fff';g.fillRect(16,16,200,12);g.fillStyle='#D4AF37';g.fillRect(16,16,200*Math.min(f/WIN,1),12);
+}
+function startGame(){['ov-start','ov-over','ov-win'].forEach(i=>$(i).classList.remove('on'));
+ py=GY-PH;vy=0;obs=[];f=0;off=0;next=90;run=true;cancelAnimationFrame(raf);loop()}
+function jump(){if(run&&py>=GY-PH){vy=-10.5;beep(500,800,.12)}}
+function loop(){if(!run)return;
+ vy+=.55;py+=vy;if(py>=GY-PH){py=GY-PH;vy=0}
+ f++;off+=3;
+ if(f>=next&&f<WIN-120){const t=Math.random()<.5;obs.push({x:W,t,w:30,h:t?30:24});next=f+110+(Math.random()*60|0)}
+ for(let i=obs.length-1;i>=0;i--){const q=obs[i];q.x-=3;
+  if(PX+8<q.x+q.w-6&&PX+PW-8>q.x+6&&py+PH-6>GY-q.h+4){run=false;scene();$('ov-over').classList.add('on');return}
+  if(q.x<-40)obs.splice(i,1)}
+ scene();
+ if(f>=WIN){run=false;scene(true);$('ov-win').classList.add('on');const r=$('reward');r.classList.remove('hidden');r.classList.add('flex');beep(660,1320,.5);
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'start'}),2200);return}
+ raf=requestAnimationFrame(loop)}
+addEventListener('keydown',e=>{if((e.code==='Space'||e.code==='ArrowUp')&&run){e.preventDefault();jump()}});
+cvs.addEventListener('pointerdown',e=>{e.preventDefault();jump()});
+scene();
+</script>
+</body>
+</html>
